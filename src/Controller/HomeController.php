@@ -13,6 +13,15 @@ class HomeController extends AbstractController
     {
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
+            'slug' => 'Welcome to CFM'
+        ]);
+    }
+
+    #[Route('/home/dashboard', name:'app_dashboard')]
+    public function transaction(): Response
+    {
+        return $this->render('home/transaction.html.twig',[
+            'slug' => 'Dashboard',
         ]);
     }
 }

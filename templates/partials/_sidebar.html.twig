@@ -1,6 +1,6 @@
 <aside id="sidebar">
        <header class="mt-2 d-flex">
-           <span class="d-flex align-items-center me-3 ms-1">
+           <span class="d-flex align-items-center me-3 ms-2">
                <img src="{{ asset('images/logo.jpeg') }}" alt="logo">
            </span>
            <div>
@@ -24,10 +24,10 @@
                </a>
                <ul id="transaction" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                    <li class="sidebar-item">
-                       <a href="#" class="sidebar-link">Incoming</a>
+                       <a href="{{ path('app_dashboard') }}" class="sidebar-link">Incoming</a>
                    </li>
                    <li class="sidebar-item">
-                       <a href="#" class="sidebar-link">Outcoming</a>
+                       <a href="{{ path('app_dashboard') }}" class="sidebar-link">Outcoming</a>
                    </li>
                </ul>
            </li>
