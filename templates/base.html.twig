@@ -7,14 +7,27 @@
 		<link rel="icon" href="{{ asset('images/icon.jpeg') }}">
 
 		<!-- Stylesheets -->
-		<link rel="stylesheet" href="{{ asset('assets/styles/bootstrap/bootstrap.min.css') }}">
-        {% block stylesheets %}{% endblock %}
-    </head>
-	<body>
-		{% block body %}{% endblock %}
+		<link rel="stylesheet" href="{{ asset('assets/styles/lineicons/lineicons.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/styles/bootstrap/bootstrap.min.css') }}"> 
+		{% block stylesheets %}{% endblock %}
+		</head>
+		<body>
+			{% block body %}
+				<div class="wrapper d-flex">
+					{% block sidebar %}
+						{% include 'partials/_sidebar.html.twig' %}
+					{% endblock %}
 
-        <!-- Scripts -->
-        <script src="{{ asset('assets/scripts/bootstrap/bootstrap.bundle.min.js') }}"></script>
-        {% block javascript %}{% endblock %}
-	</body>
-</html>
+					{% block dashboard %}
+						<div class="main d-flex flex-column">
+							{% include 'partials/_toogle.html.twig' %}
+
+							{% block main %}{% endblock %}
+						</div>
+					{% endblock %}
+				</div>
+			{% endblock %}
+
+			<script src="{{ asset('assets/scripts/bootstrap/bootstrap.bundle.min.js') }}"></script>
+		</body>
+	</html>

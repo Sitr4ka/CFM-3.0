@@ -1,14 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!
-{% endblock %}
-
-{% block body %}
-	<div class="container-fluid text-center">
-		<h1>Hello World !</h1>
-	</div>
+{% block main %}
+    <main class="content px-3 py-2">
+        <div class="container-fluid">
+            <div class="mb-3 text-center">
+                <h3>Welcome to CFM</h3>
+            </div>
+        </div>
+    </main>
 {% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/styles/mycss.css') }}"> 
 {% endblock %}
