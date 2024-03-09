@@ -1,42 +1,47 @@
 <aside id="sidebar">
-       <header class="mt-2 d-flex">
-           <span class="d-flex align-items-center me-3 ms-2">
-               <img src="{{ asset('images/logo.jpeg') }}" alt="logo">
-           </span>
-           <div>
-               <span class="sidebar-logo">Church Funds</span> <br>
-               <span class="sidebar-logo">Management</span>
-           </div>
-       </header>
-       <!-- Sidebar Navigation-->
-       <ul class="sidebar-nav px-3 py-0">
-           <li class="sidebar-item">
-               <a href="{{ path('app_home') }}" class="sidebar-link">
-                   <i class="lni lni-home pe-2"></i>
-                   Home
-               </a>
-           </li>
-           <li class="sidebar-item">
-               <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#transaction"
-                   aria-expanded="false" aria-controls="transaction">
-                   <i class="lni lni-wallet pe-2"></i>
-                   Trans
-               </a>
-               <ul id="transaction" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                   <li class="sidebar-item">
-                       <a href="{{ path('app_income') }}" class="sidebar-link">Incoming</a>
-                   </li>
-                   <li class="sidebar-item">
-                       <a href="{{ path('app_outcome') }}" class="sidebar-link">Outcoming</a>
-                   </li>
-               </ul>
-           </li>
-           <li class="sidebar-item">
-               <a href="#" class="sidebar-link">
-                   <i class="lni lni-bar-chart pe-2"></i>
-                   Chart
-               </a>
-           </li>
-       </ul>
+	<header class="mt-2 d-flex">
+		<span class="d-flex align-items-center me-3 ms-2">
+			<img src="{{ asset('images/logo.jpeg') }}" alt="logo">
+		</span>
+		<div>
+			<span class="sidebar-logo">Church Funds</span>
+			<br>
+			<span class="sidebar-logo">Management</span>
+		</div>
+	</header>
+	<!-- Sidebar Navigation-->
+	<ul class="sidebar-nav px-3 py-0">
+		<li class="sidebar-item">
+			<a href="{{ path('app_home') }}" class="sidebar-link">
+				<i class="lni lni-home pe-2"></i>
+				Home
+			</a>
+		</li>
+		<li class="sidebar-item">
+			<a href="{{ path('app_dashboard') }}" class="sidebar-link">
+				<i class="lni lni-control-panel"></i>
+				Dashboard
+			</a>
+		</li>
+		<li class="sidebar-item">
+			<a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#transaction" aria-expanded="false" aria-controls="transaction">
+				<i class="lni lni-wallet pe-2"></i>
+				Trans
+			</a>
+			<ul id="transaction" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				<li class="sidebar-item">
+					<a href="{{ path('app_income') }}" class="sidebar-link">Incoming</a>
+				</li>
+				<li class="sidebar-item">
+					<a href="{{ path('app_outcome') }}" class="sidebar-link">Outcoming</a>
+				</li>
+			</ul>
+		</li>
+		<li class="sidebar-item">
+			<a href="#" class="sidebar-link">
+				<i class="lni lni-bar-chart pe-2"></i>
+				Chart
+			</a>
+		</li>
+	</ul>
 </aside>
-   

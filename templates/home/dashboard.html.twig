@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/styles/mycss.css') }}"> 
+{% endblock %}
+
+{% block main %}
+    <div class='container-fluid mt-3'>
+		<div class="row ms-5">
+			<div class=" col-sm-12 col-lg-5 rounded-4 bg-light border-2 me-2 mb-2">
+				<table class="table table-borderless mt-2 table-light table-hover ">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Motif</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for outcome in outcomes %}
+							<tr>
+								<td>{{outcome.executedAt|date('d-m-Y')}}</td>
+								<td>{{outcome.motif}}</td>
+								<td>{{outcome.amount}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+{# 			<div class=" col-sm-0 col-lg-1 rounded-4 bg-light border-2  mb-2">
+			</div> #}
+			<div class=" col-sm-12 col-lg-6 rounded-4 bg-light border-2 ms-2 mb-2">
+				<table class="table table-borderless mt-2 table-light table-hover ">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Motif</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for income in incomes %}
+							<tr>
+								<td>{{income.executedAt|date('d-m-Y')}}</td>
+								<td>{{income.motif}}</td>
+								<td>{{income.amount}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+{% endblock %}

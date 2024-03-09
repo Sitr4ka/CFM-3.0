@@ -2,12 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Churches;
 use App\Entity\Incomes;
 use App\Entity\Outcomes;
 use App\Form\IncomeRegistrationType;
 use App\Form\OutcomeRegistrationType;
 use App\Repository\ChurchesRepository;
+use App\Repository\IncomesRepository;
+use App\Repository\OutcomesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +44,7 @@ class HomeController extends AbstractController
                 'success',
                 'Registration successfully completed',
             ); 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_dashboard');
         }
         return $this->render('home/income.html.twig',[
             'slug' => 'Income Registration',
@@ -67,11 +68,29 @@ class HomeController extends AbstractController
                 'success',
                 'Registration successfully completed',
             ); 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_dashboard');
         }
         return $this->render('home/outcome.html.twig',[
             'slug' => 'Outcome Registration',
             'outcomes' => $form,
+        ]);
+    }
+
+    #[Route('/home/dashboard', name: 'app_dashboard')]
+    public function dashboard(OutcomesRepository $outcomesRepository, IncomesRepository $incomesRepository) : Response
+    {
+        $user = $this->getUser();
+        $incomes = $incomesRepository->findBy([
+            'churches' => $user,
+        ]);
+        $outcomes = $outcomesRepository->findBy([
+            'churches' => $user,
+        ]);
+        // dd($outcomes);
+        return $this->render('home/dashboard.html.twig', [
+            'slug' => 'Dashboard',
+            'outcomes' => $outcomes,
+            'incomes' => $incomes,
         ]);
     }
 }
