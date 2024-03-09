@@ -1,5 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/styles/mycss.css') }}"> 
+	<link rel="stylesheet" href="{{ asset('assets/styles/mycss.css') }}">
+{% endblock %}
+
+{% block main %}
+	<div class='container-fluid mt-3'>
+		<div class="row mx-2 ">
+		<div class="col-sm-0 col-lg-2"></div>
+			<div class=" col-sm-12 col-lg-8 rounded-4 bg-light border-2">
+				<table class="table table-borderless mt-2 table-light table-hover ">
+					<thead>
+						<tr>
+							<th>Designation</th>
+							<th>Username</th>
+							<th>Balance</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for church in churches %}
+							<tr>
+								<td>{{church.design}}</td>
+								<td>{{church.username}}</td>
+								<td>{{church.balance}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+
+			</div>
+			<div class="col-sm-0 col-lg-2"></div>
+		</div>
+	</div>
 {% endblock %}

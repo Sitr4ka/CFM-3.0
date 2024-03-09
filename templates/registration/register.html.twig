@@ -3,18 +3,30 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <div class='container mt-5 '>
+		<div class='row justify-content-center '>
+			<div class='col-4'>
+			</div>	
+			<div class='col-3 border rounded-3  '>
+                <h1>Register</h1>
+            
+            
+                {{ form_errors(registrationForm) }}
+            
+                {{ form_start(registrationForm) }}
+                    {{ form_row(registrationForm.design) }}
+                    {{ form_row(registrationForm.username) }}
+                    {{ form_row(registrationForm.plainPassword, {
+                        label: 'Password'
+                    }) }}
+                    {{ form_row(registrationForm.confirmMyRegistration) }}
+            
+                    <button type="submit" class="btn btn-primary ">Register</button>
+                {{ form_end(registrationForm) }}
+			</div>	
+			<div class='col-4'>
 
-    {{ form_errors(registrationForm) }}
-
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.design) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.confirmMyRegistration) }}
-
-        <button type="submit" class="btn btn-primary ">Register</button>
-    {{ form_end(registrationForm) }}
+			</div>		
+		</div>
+    </div>
 {% endblock %}
