@@ -28,16 +28,20 @@ class HomeController extends AbstractController
     }
 
     #[Route('/home/income', name:'app_income')]
-    public function incomeRegistration(Request $request, EntityManagerInterface $em): Response
+    public function incomeRegistration(Request $request, ChurchesRepository $repository, EntityManagerInterface $em): Response
     {
         $income = new Incomes;
+        $user = $this->getUser();
+        $balance = $this->getUser()->getBalance();
         $form = $this->createForm(IncomeRegistrationType::class, $income);
         
-
         $form->handleRequest($request);
         $church = $this->getUser();
         if ($form->isSubmitted() && $form->isValid()) { 
             $income->setChurches($church);
+            $amount = $income->getAmount();
+            $balance = $balance + $amount;
+            $user->setBalance($balance);
             $em->persist($income);
             $em->flush();
             $this->addFlash(
@@ -56,18 +60,33 @@ class HomeController extends AbstractController
     public function outcomeRegistration(Request $request, EntityManagerInterface $em): Response
     {
         $outcome = new Outcomes;
+        $user = $this->getUser();
+        $balance = $this->getUser()->getBalance();
         $form = $this->createForm(OutcomeRegistrationType::class, $outcome);
 
         $form->handleRequest($request);
         $church = $this->getUser();
         if ($form->isSubmitted() && $form->isValid()) { 
             $outcome->setChurches($church);
-            $em->persist($outcome);
-            $em->flush();
-            $this->addFlash(
-                'success',
-                'Registration successfully completed',
-            ); 
+            $amount = $outcome->getAmount();
+            $balance = $balance - $amount;
+
+            if ($balance >= 10000)
+            {
+
+                $user->setBalance($balance);           
+                $em->persist($outcome);
+                $em->flush();
+                $this->addFlash(
+                    'success',
+                    'Registration successfully completed',
+                ); 
+            } else {
+                $this->addFlash(
+                   'error',
+                   'Balance should be under 10 000 Ar'
+                );
+            }
             return $this->redirectToRoute('app_dashboard');
         }
         return $this->render('home/outcome.html.twig',[
