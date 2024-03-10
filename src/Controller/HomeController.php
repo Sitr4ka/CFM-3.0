@@ -83,9 +83,10 @@ class HomeController extends AbstractController
                 ); 
             } else {
                 $this->addFlash(
-                   'error',
-                   'Balance should be under 10 000 Ar'
+                   'warning',
+                   'You don\'t have enough solde',
                 );
+                return $this->redirectToRoute('app_outcome');
             }
             return $this->redirectToRoute('app_dashboard');
         }
