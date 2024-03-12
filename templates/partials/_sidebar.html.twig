@@ -1,6 +1,6 @@
 <aside id="sidebar">
 	<header class="mt-2 d-flex">
-		<span class="d-flex align-items-center me-3 ms-4 ps-2">
+		<span class="d-flex align-items-center me-3 ms-2 ps-2">
 			<img src="{{ asset('images/logo.jpeg') }}" alt="logo">
 		</span>
 		<div>
@@ -10,7 +10,7 @@
 		</div>
 	</header>
 	<!-- Sidebar Navigation-->
-	<ul class="sidebar-nav px-3 py-0">
+	<ul class="sidebar-nav py-0">
 		<li class="sidebar-item">
 			<a href="{{ path('app_home') }}" class="sidebar-link">
 				<i class="lni lni-home pe-2"></i>
@@ -20,7 +20,7 @@
 		<li class="sidebar-item">
 			<a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#transaction" aria-expanded="false" aria-controls="transaction">
 				<i class="lni lni-wallet pe-2"></i>
-				<span>Trans</span>
+				<span>Transactions</span>
 			</a>
 			<ul id="transaction" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				<li class="sidebar-item">
@@ -34,7 +34,7 @@
 		<li class="sidebar-item">
 		<li class="sidebar-item">
 			<a href="{{ path('app_dashboard') }}" class="sidebar-link">
-				<i class="lni lni-control-panel"></i>
+				<i class="lni lni-control-panel pe-2"></i>
 				<span>Dashboard</span>
 			</a>
 		</li>
@@ -47,7 +47,7 @@
 	<div class="sidebar-footer">
         <a href="{{ path('app_logout') }}" class="sidebar-link">
             <i class="lni lni-exit"></i>
-            <span>Logout</span>
+            <span class='ms-3'>Logout</span>
         </a>
     </div>
 </aside>

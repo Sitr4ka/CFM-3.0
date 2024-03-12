@@ -14,6 +14,7 @@
 							<th></th>
 							<th>Motif</th>
 							<th>Amount</th>
+
 						</tr>
 					</thead>
 					<tbody>
@@ -22,6 +23,14 @@
 								<td>{{outcome.executedAt|date('d-m-Y')}}</td>
 								<td>{{outcome.motif}}</td>
 								<td>{{outcome.amount}}</td>
+								<td>
+									<a href="{{ path('app_editOutcome', {id: outcome.id} ) }}" class="btn edit">
+										<i class='lni lni-pencil-alt'></i>		
+									</a>			
+									<a href="{{ path('app_deleteOutcome', {id: outcome.id} ) }}" class="btn remove">
+										<i class='lni lni-trash-can'></i>	
+									</a>
+								</td>								
 							</tr>
 						{% endfor %}
 					</tbody>
@@ -44,6 +53,14 @@
 								<td>{{income.executedAt|date('d-m-Y')}}</td>
 								<td>{{income.motif}}</td>
 								<td>{{income.amount}}</td>
+								<td>
+									<a href="{{ path('app_editIncome', {id: income.id} ) }}" class="btn edit">
+										<i class='lni lni-pencil-alt'></i>		
+									</a>			
+									<a href="{{ path('app_deleteIncome', {id: income.id} ) }}" class="btn remove">
+										<i class='lni lni-trash-can'></i>	
+									</a>						
+								</td>	
 							</tr>
 						{% endfor %}
 					</tbody>
