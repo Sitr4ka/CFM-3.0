@@ -39,6 +39,12 @@ class Churches implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true, options: ['default' => 0])]
     private ?int $balance = 0;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $incomes = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $outgoing = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +140,30 @@ class Churches implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBalance(?int $balance): static
     {
         $this->balance = $balance;
+
+        return $this;
+    }
+
+    public function getIncomes(): ?int
+    {
+        return $this->incomes;
+    }
+
+    public function setIncomes(?int $incomes): static
+    {
+        $this->incomes = $incomes;
+
+        return $this;
+    }
+
+    public function getOutgoing(): ?int
+    {
+        return $this->outgoing;
+    }
+
+    public function setOutgoing(?int $outgoing): static
+    {
+        $this->outgoing = $outgoing;
 
         return $this;
     }
