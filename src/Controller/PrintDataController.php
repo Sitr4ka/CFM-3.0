@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\ChurchesRepository;
 use App\Repository\IncomesRepository;
 use App\Repository\OutcomesRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -12,9 +13,18 @@ use Symfony\Component\Routing\Attribute\Route;
 class PrintDataController extends AbstractController
 {
     #[Route('/home', name: 'app_home')]
-    public function index(ChurchesRepository $repository): Response
+    public function index(ChurchesRepository $repository, EntityManagerInterface $em): Response
     {
         $churches = $repository->findAll();
+        $churche = $this->getUser();
+        
+        $incomes = $churche->getIncomes();
+        $outgoing = $churche->getOutgoing();
+        $balance = $incomes - $outgoing;
+        $churche->setBalance($balance);
+        $em->flush();
+
+
         return $this->render('home/index.html.twig', [
             'slug' => 'Welcome to CFM',
             'churches' => $churches,
