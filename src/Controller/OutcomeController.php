@@ -52,7 +52,47 @@ class OutcomeController extends AbstractController
             'outcomes' => $form,
         ]);
         }
+        
+    /* 
+     * UPDATE
+     */ 
+        #[Route('/home/outcome/edit/{id}', name: 'app_editOutcome')]
+        public function editOutcome(Request $request, EntityManagerInterface $em, Outcomes $outcomes, OutcomesRepository $oR): Response
+        {
+            $church = $this->getUser();
+            $incomes = $church->getIncomes();
+            $outgoing = $church->getOutgoing();
+            $lastAmount = $outcomes->getAmount();
+            
+            $form = $this->createForm(OutcomeRegistrationType::class, $outcomes);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) { 
+                $amount = $outcomes->getAmount();
+                $diff = $amount - $lastAmount;
+                $outgoing = $outgoing + $diff;
+                $valid = ($incomes - $outgoing) >= 10000;
 
+                if($valid) { 
+                $em->persist($outcomes);
+                $em->flush();
+                $church->updateOutgoing($oR, $em, $church);
+                $this->addFlash(
+                    'success',
+                    'Modification successfully completed',
+                ); 
+                return $this->redirectToRoute('app_dashboard');
+                } else {
+                    $this->addFlash(
+                        'warning',
+                        'Please verify your solde',
+                    );                     
+                }
+            }
+            return $this->render('home/outcome/edit.html.twig',[
+                'outcomes' =>  $form->createView(),
+                'slug' => "Income Modifications"
+            ]);
+        }
     /* 
      * REMOVE
      */ 
@@ -71,29 +111,5 @@ class OutcomeController extends AbstractController
             return $this->redirectToRoute('app_dashboard');
         }
     
-    /* 
-     * UPDATE
-     */ 
-        #[Route('/home/outcome/edit/{id}', name: 'app_editOutcome')]
-        public function editOutcome(Request $request, EntityManagerInterface $em, Outcomes $outcomes, OutcomesRepository $oR): Response
-        {
-            $church = $this->getUser();
-            $form = $this->createForm(OutcomeRegistrationType::class, $outcomes);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) { 
-                $em->persist($outcomes);
-                $em->flush();
-                $church->updateOutgoing($oR, $em, $church);
-                $this->addFlash(
-                    'success',
-                    'Modification successfully completed',
-                ); 
-                return $this->redirectToRoute('app_dashboard');
-            }
-            return $this->render('home/outcome/edit.html.twig',[
-                'outcomes' =>  $form->createView(),
-                'slug' => "Income Modifications"
-            ]);
-        }
         
 }

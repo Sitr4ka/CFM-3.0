@@ -44,45 +44,75 @@ class IncomeController extends AbstractController
         }
 
     /* 
-     * REMOVE
-     */
-        #[Route('/home/income/delete/{id}', name: 'app_deleteIncome')]
-        public function deleteIncome(EntityManagerInterface $em, Incomes $incomes, IncomesRepository $incomesRepository): Response
-        {
-            $em->remove($incomes);
-            $em->flush();
-            // Updating Incomes
-            $church = $this->getUser();
-            $church->updateIncomes($incomesRepository, $em, $church);
-            $this->addFlash(
-                'success',
-                'Deletion successfully completed',
-            ); 
-            return $this->redirectToRoute('app_dashboard');
-        }   
-
-    /* 
      * UPDATE
      */
         #[Route('/home/income/edit/{id}', name: 'app_editIncome')]
-        public function editIncome(Request $request, EntityManagerInterface $em, Incomes $incomes, IncomesRepository $iR): Response
+        public function editIncome(Request $request, EntityManagerInterface $em, Incomes $income, IncomesRepository $iR): Response
         {
             $church = $this->getUser();
-            $form = $this->createForm(IncomeRegistrationType::class, $incomes);
+            $outgoing = $church->getOutgoing();
+            $incomes = $church->getIncomes();
+            $lastAmount = $income->getAmount();
+
+            $form = $this->createForm(IncomeRegistrationType::class, $income);
             $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) { 
-                $em->persist($incomes);
-                $em->flush();
-                $church->updateIncomes($iR,$em, $church);
-                $this->addFlash(
-                    'success',
-                    'Modification successfully completed',
+            if ($form->isSubmitted() && $form->isValid()) {
+                $amount = $income->getAmount();
+                $diff = $amount - $lastAmount;
+                $incomes = $incomes + $diff;
+                $valid = ($incomes - $outgoing) >= 10000;         
+                if (!$valid) {
+                    $this->addFlash(
+                        'warning',
+                        'Please verify your solde',
+                    );  
+                } else { 
+                    $em->persist($income);
+                    $em->flush();
+                    $church->updateIncomes($iR,$em, $church);
+                    $this->addFlash(
+                        'success',
+                        'Modification successfully completed',
                 ); 
                 return $this->redirectToRoute('app_dashboard');
+                }
             }
             return $this->render('home/income/edit.html.twig',[
                 'incomes' =>  $form->createView(),
                 'slug' => "Income Modifications"
             ]);
         }       
+
+    /* 
+     * REMOVE
+     */
+        #[Route('/home/income/delete/{id}', name: 'app_deleteIncome')]
+        public function deleteIncome(EntityManagerInterface $em, Incomes $income, IncomesRepository $incomesRepository): Response
+        {   
+            $amount = $income->getAmount();
+            $church = $this->getUser();
+            $incomes = $church->getIncomes();
+            $outgoing = $church->getOutgoing();
+
+            $nextIncomes = $incomes - $amount;
+            $valid = $nextIncomes - $outgoing >= 10000;
+            if (!$valid) { 
+                $this->addFlash(
+                    'warning',
+                    'Please verify your solde',
+                );  
+            } else { 
+                $em->remove($income);
+                $em->flush();
+                // Updating Incomes
+                $church = $this->getUser();
+                $church->updateIncomes($incomesRepository, $em, $church);
+                $this->addFlash(
+                    'success',
+                    'Deletion successfully completed',
+            );
+            } 
+            return $this->redirectToRoute('app_dashboard');
+        }   
+
 }
