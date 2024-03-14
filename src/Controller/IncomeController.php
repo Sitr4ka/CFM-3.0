@@ -20,9 +20,8 @@ class IncomeController extends AbstractController
         public function incomeRegistration(Request $request, IncomesRepository $incomesRepository, EntityManagerInterface $em): Response
         {
             $income = new Incomes;
-            $total = 0;
             $church = $this->getUser();
-                  
+            
             $form = $this->createForm(IncomeRegistrationType::class, $income);         
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) { 
@@ -30,7 +29,9 @@ class IncomeController extends AbstractController
                 $em->persist($income);
                 $em->flush();
 
-                $incomes = $incomesRepository->findBy([  // UPDATING TOTAL INCOMES
+                // UPDATING TOTAL INCOMES
+                $total = 0; 
+                $incomes = $incomesRepository->findBy([  
                     'churches' => $church,
                 ]);
                 foreach ($incomes as $value) {
@@ -55,17 +56,22 @@ class IncomeController extends AbstractController
      * REMOVE
      */
         #[Route('/home/income/delete/{id}', name: 'app_deleteIncome')]
-        public function deleteIncome(EntityManagerInterface $em, Incomes $incomes): Response
+        public function deleteIncome(EntityManagerInterface $em, Incomes $incomes, IncomesRepository $incomesRepository): Response
         {
-            if (!$incomes) {
-                $this->addFlash(
-                    'success',
-                    'Income NOT FOUND',
-                ); 
-                return $this->redirectToRoute('app_dashboard');
-            }
             $em->remove($incomes);
             $em->flush();
+                            // UPDATING TOTAL INCOMES
+                            $total = 0; 
+                            $church = $this->getUser();
+                            $incomes = $incomesRepository->findBy([  
+                                'churches' => $church,
+                            ]);
+                            foreach ($incomes as $value) {
+                                $total += $value->getAmount();
+                            }
+                            $totalIncomes = $church->setIncomes($total);
+                            $em->persist($church);
+                            $em->flush();
             $this->addFlash(
                 'success',
                 'Deletion successfully completed',

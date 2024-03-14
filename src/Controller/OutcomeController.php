@@ -20,7 +20,6 @@ class OutcomeController extends AbstractController
         public function outcomeRegistration(Request $request, OutcomesRepository $outcomesRepository, EntityManagerInterface $em): Response
         {
             $outcome = new Outcomes;
-            $total = 0;
             $church = $this->getUser();
             
             $form = $this->createForm(OutcomeRegistrationType::class, $outcome);
@@ -29,8 +28,10 @@ class OutcomeController extends AbstractController
                 $outcome->setChurches($church);         
                 $em->persist($outcome);
                 $em->flush();
-
-                $outcomes = $outcomesRepository->findBy([  // UPDATING TOTAL OUTCOME
+                
+                // UPDATING TOTAL OUTCOME
+                $total = 0;
+                $outcomes = $outcomesRepository->findBy([ 
                     'churches' => $church,
                 ]);
                 foreach ($outcomes as $value) {
@@ -55,17 +56,22 @@ class OutcomeController extends AbstractController
      * REMOVE
      */ 
         #[Route('/home/outcome/delete/{id}', name: 'app_deleteOutcome')]
-        public function deleteOutcome(EntityManagerInterface $em, Outcomes $outcomes): Response
+        public function deleteOutcome(EntityManagerInterface $em, Outcomes $outcomes, OutcomesRepository $outcomesRepository): Response
         {
-            if (!$outcomes) {
-                $this->addFlash(
-                    'success',
-                    'Income NOT FOUND',
-                ); 
-                return $this->redirectToRoute('app_dashboard');
-            }
             $em->remove($outcomes);
             $em->flush();
+                            // UPDATING TOTAL OUTCOME
+                            $total = 0;
+                            $church = $this->getUser();
+                            $outcomes = $outcomesRepository->findBy([ 
+                                'churches' => $church,
+                            ]);
+                            foreach ($outcomes as $value) {
+                                $total += $value->getAmount();
+                            }
+                            $totalOutcomes = $church->setOutgoing($total);
+                            $em->persist($church);
+                            $em->flush();
             $this->addFlash(
                 'success',
                 'Deletion successfully completed',

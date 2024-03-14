@@ -22,6 +22,7 @@ class PrintDataController extends AbstractController
         $outgoing = $churche->getOutgoing();
         $balance = $incomes - $outgoing;
         $churche->setBalance($balance);
+        $em->persist($churche);
         $em->flush();
 
 
