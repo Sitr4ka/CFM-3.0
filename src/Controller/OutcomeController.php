@@ -21,35 +21,36 @@ class OutcomeController extends AbstractController
         {
             $outcome = new Outcomes;
             $church = $this->getUser();
+            $solde = $church->getBalance();
+            $marge = $solde - 10000;
             
             $form = $this->createForm(OutcomeRegistrationType::class, $outcome);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) { 
+                $amount = $outcome->getAmount();
+                if (!($marge > 0 && $amount <= $marge)) {   
+                    $this->addFlash(
+                        'warning',
+                        'Please verify your solde',
+                    );               
+                } else { 
                 $outcome->setChurches($church);         
                 $em->persist($outcome);
                 $em->flush();
                 
                 // UPDATING TOTAL OUTCOME
-                $total = 0;
-                $outcomes = $outcomesRepository->findBy([ 
-                    'churches' => $church,
-                ]);
-                foreach ($outcomes as $value) {
-                    $total += $value->getAmount();
-                }
-                $totalOutcomes = $church->setOutgoing($total);
-                $em->persist($church);
-                $em->flush();
+                $church->updateOutgoing($outcomesRepository, $em, $church);
                 $this->addFlash(
                     'success',
                     'Registration successfully completed',
                 ); 
-                return $this->redirectToRoute('app_dashboard');
+                return $this->redirectToRoute('app_dashboard'); 
+                }
             }
             return $this->render('home/outcome/registration.html.twig',[
-                'slug' => 'Outcome Registration',
-                'outcomes' => $form,
-            ]);
+            'slug' => 'Outcome Registration',
+            'outcomes' => $form,
+        ]);
         }
 
     /* 
@@ -60,18 +61,9 @@ class OutcomeController extends AbstractController
         {
             $em->remove($outcomes);
             $em->flush();
-                            // UPDATING TOTAL OUTCOME
-                            $total = 0;
-                            $church = $this->getUser();
-                            $outcomes = $outcomesRepository->findBy([ 
-                                'churches' => $church,
-                            ]);
-                            foreach ($outcomes as $value) {
-                                $total += $value->getAmount();
-                            }
-                            $totalOutcomes = $church->setOutgoing($total);
-                            $em->persist($church);
-                            $em->flush();
+            // Updating Outcomes
+            $church = $this->getUser();
+            $church->updateOutgoing($outcomesRepository, $em, $church);
             $this->addFlash(
                 'success',
                 'Deletion successfully completed',
@@ -83,13 +75,15 @@ class OutcomeController extends AbstractController
      * UPDATE
      */ 
         #[Route('/home/outcome/edit/{id}', name: 'app_editOutcome')]
-        public function editOutcome(Request $request, EntityManagerInterface $em, Outcomes $outcomes): Response
+        public function editOutcome(Request $request, EntityManagerInterface $em, Outcomes $outcomes, OutcomesRepository $oR): Response
         {
+            $church = $this->getUser();
             $form = $this->createForm(OutcomeRegistrationType::class, $outcomes);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) { 
                 $em->persist($outcomes);
                 $em->flush();
+                $church->updateOutgoing($oR, $em, $church);
                 $this->addFlash(
                     'success',
                     'Modification successfully completed',

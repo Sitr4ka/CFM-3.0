@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Repository\OutcomesRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: OutcomesRepository::class)]
 class Outcomes
 {
@@ -21,6 +21,7 @@ class Outcomes
     private ?string $motif = null;
 
     #[ORM\Column]
+    #[Assert\Positive()]
     private ?int $amount = null;
 
     #[ORM\ManyToOne(inversedBy: 'outcomes')]

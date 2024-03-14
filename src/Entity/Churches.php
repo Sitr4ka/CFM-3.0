@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\ChurchesRepository;
+use App\Repository\IncomesRepository;
+use App\Repository\OutcomesRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -167,4 +170,58 @@ class Churches implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function updateBalance(Churches $church, EntityManagerInterface $em) : void 
+    {
+        $incomes = $church->getIncomes();
+        $outgoing = $church->getOutgoing();
+        $balance = $incomes - $outgoing;
+        $church->setBalance($balance);
+        $em->persist($church);
+        $em->flush();
+    }
+
+    /*  $balance = $church->getBalance(); 
+     *  $marge = $balance - 10000;
+     * 
+     * if ( !($marge > 0 && $outcomes->getAmount() < $marge)) {
+        # Arrêter l'enregistrement;
+        }
+        Poursuivre l'enregistrement; 
+     */
+
+    public function updateIncomes(IncomesRepository $iR, EntityManagerInterface $em, Churches $church):void
+    {
+        $total = 0; 
+        $incomes = $iR->findBy([  
+            'churches' => $church,
+        ]);
+        foreach ($incomes as $value) {
+            $total += $value->getAmount();
+        }
+        $totalIncomes = $church->setIncomes($total);
+        $em->persist($church);
+        $em->flush();
+        
+        //Updating balance
+        $church->updateBalance($church, $em);
+    } 
+
+    public function updateOutgoing(OutcomesRepository $oR, EntityManagerInterface $em, Churches $church):void
+    {
+        // UPDATING TOTAL INCOMES
+        $total = 0; 
+        $outcomes = $oR->findBy([  
+            'churches' => $church,
+        ]);
+        foreach ($outcomes as $value) {
+            $total += $value->getAmount();
+        }
+        $totalOutcomes = $church->setOutgoing($total);
+        $em->persist($church);
+        $em->flush();
+
+        //Updating balance
+        $church->updateBalance($church, $em);
+    } 
 }

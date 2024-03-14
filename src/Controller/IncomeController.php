@@ -30,16 +30,7 @@ class IncomeController extends AbstractController
                 $em->flush();
 
                 // UPDATING TOTAL INCOMES
-                $total = 0; 
-                $incomes = $incomesRepository->findBy([  
-                    'churches' => $church,
-                ]);
-                foreach ($incomes as $value) {
-                    $total += $value->getAmount();
-                }
-                $totalIncomes = $church->setIncomes($total);
-                $em->persist($church);
-                $em->flush();
+                $church->updateIncomes($incomesRepository, $em, $church);                
                 $this->addFlash(
                     'success',
                     'Registration successfully completed',
@@ -60,18 +51,9 @@ class IncomeController extends AbstractController
         {
             $em->remove($incomes);
             $em->flush();
-                            // UPDATING TOTAL INCOMES
-                            $total = 0; 
-                            $church = $this->getUser();
-                            $incomes = $incomesRepository->findBy([  
-                                'churches' => $church,
-                            ]);
-                            foreach ($incomes as $value) {
-                                $total += $value->getAmount();
-                            }
-                            $totalIncomes = $church->setIncomes($total);
-                            $em->persist($church);
-                            $em->flush();
+            // Updating Incomes
+            $church = $this->getUser();
+            $church->updateIncomes($incomesRepository, $em, $church);
             $this->addFlash(
                 'success',
                 'Deletion successfully completed',
@@ -83,13 +65,15 @@ class IncomeController extends AbstractController
      * UPDATE
      */
         #[Route('/home/income/edit/{id}', name: 'app_editIncome')]
-        public function editIncome(Request $request, EntityManagerInterface $em, Incomes $incomes): Response
+        public function editIncome(Request $request, EntityManagerInterface $em, Incomes $incomes, IncomesRepository $iR): Response
         {
+            $church = $this->getUser();
             $form = $this->createForm(IncomeRegistrationType::class, $incomes);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) { 
                 $em->persist($incomes);
                 $em->flush();
+                $church->updateIncomes($iR,$em, $church);
                 $this->addFlash(
                     'success',
                     'Modification successfully completed',
