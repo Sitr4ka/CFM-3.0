@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Churches;
 use App\Entity\Outcomes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,28 +22,29 @@ class OutcomesRepository extends ServiceEntityRepository
         parent::__construct($registry, Outcomes::class);
     }
 
-    //    /**
-    //     * @return Outcomes[] Returns an array of Outcomes objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('o.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     *  @return Incomes[] Returns an array of Incomes objects
+     */
+    public function findByMotif($input, Churches $church)
+    {
+        $queryBuilder = $this->createQueryBuilder('i')
+        ->where('i.churches = :church')
+        ->andWhere('i.motif LIKE :motif')
+        ->setParameter('church', $church)
+        ->setParameter('motif', '%'.$input['keyword'].'%')
+        ->orderBy('i.executedAt', 'ASC')
+        ->setMaxResults(10);
 
-    //    public function findOneBySomeField($value): ?Outcomes
-    //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+            if (($input['startDate']) && ($input['endDate'])) {
+                $queryBuilder
+                    ->andWhere('i.executedAt BETWEEN :startDate AND :endDate')
+                    ->setParameter('startDate', $input['startDate'])
+                    ->setParameter('endDate', $input['endDate']);
+            }
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
+
 }

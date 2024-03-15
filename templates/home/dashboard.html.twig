@@ -1,11 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/styles/base.css') }}"> 
-{% endblock %}
-
 {% block main %}
-    <div class='container-fluid mt-3'>
+	<div class='container-fluid mt-3'>
 		<div class="row ms-5">
 			<div class=" col-sm-12 col-lg-5 rounded-4 bg-light border-2 me-2 mb-2">
 				<table class="table table-borderless mt-2 table-light table-hover ">
@@ -14,7 +10,6 @@
 							<th></th>
 							<th>Motif</th>
 							<th>Amount</th>
-
 						</tr>
 					</thead>
 					<tbody>
@@ -25,19 +20,19 @@
 								<td>{{outcome.amount}}</td>
 								<td>
 									<a href="{{ path('app_editOutcome', {id: outcome.id} ) }}" class="btn edit">
-										<i class='lni lni-pencil-alt'></i>		
-									</a>			
-									<a href="{{ path('app_deleteOutcome', {id: outcome.id} ) }}" class="btn remove">
-										<i class='lni lni-trash-can'></i>	
+										<i class='lni lni-pencil-alt'></i>
 									</a>
-								</td>								
+									<a href="{{ path('app_deleteOutcome', {id: outcome.id} ) }}" class="btn remove">
+										<i class='lni lni-trash-can'></i>
+									</a>
+								</td>
 							</tr>
 						{% endfor %}
 					</tbody>
 				</table>
 			</div>
-{# 			<div class=" col-sm-0 col-lg-1 rounded-4 bg-light border-2  mb-2">
-			</div> #}
+			{# 			<div class=" col-sm-0 col-lg-1 rounded-4 bg-light border-2  mb-2">
+							</div> #}
 			<div class=" col-sm-12 col-lg-6 rounded-4 bg-light border-2 ms-2 mb-2">
 				<table class="table table-borderless mt-2 table-light table-hover ">
 					<thead>
@@ -55,12 +50,12 @@
 								<td>{{income.amount}}</td>
 								<td>
 									<a href="{{ path('app_editIncome', {id: income.id} ) }}" class="btn edit">
-										<i class='lni lni-pencil-alt'></i>		
-									</a>			
+										<i class='lni lni-pencil-alt'></i>
+									</a>
 									<a href="{{ path('app_deleteIncome', {id: income.id} ) }}" class="btn remove">
-										<i class='lni lni-trash-can'></i>	
-									</a>						
-								</td>	
+										<i class='lni lni-trash-can'></i>
+									</a>
+								</td>
 							</tr>
 						{% endfor %}
 					</tbody>

@@ -1,9 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-	<link rel="stylesheet" href="{{ asset('assets/styles/base.css') }}">
-{% endblock %}
-
 {% block main %}
 
     <div class='container mt-5 '>
@@ -11,7 +7,7 @@
 			<div class='col-sm-2 col-lg-4'>
 			</div>	
 			<div class='col-sm-8 col-lg-3 border rounded-3  '>
-		   		{{ form_start(outcomes) }}
+		   	{{ form_start(outcomes) }}
 
     			{{ form_end(outcomes) }}
 				
