@@ -6,9 +6,12 @@ use App\Form\SearchDataType;
 use App\Repository\ChurchesRepository;
 use App\Repository\IncomesRepository;
 use App\Repository\OutcomesRepository;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 use function PHPSTORM_META\type;
@@ -19,7 +22,7 @@ class PrintDataController extends AbstractController
     public function index(ChurchesRepository $repository): Response
     {
         $churches = $repository->findAll();     
-        return $this->render('home/index.html.twig', [
+        return $this->render('printData/index.html.twig', [
             'slug' => 'Welcome to CFM',
             'churches' => $churches,
         ]);
@@ -39,7 +42,7 @@ class PrintDataController extends AbstractController
         ], ['executedAt' => 'ASC'
         ]);
 // dd($outcomes);
-        return $this->render('home/dashboard.html.twig', [
+        return $this->render('printData/dashboard.html.twig', [
         'slug' => 'Dashboard',
         'outcomes' => $outcomes,
         'incomes' => $incomes,
@@ -50,31 +53,99 @@ class PrintDataController extends AbstractController
     public function searchIncome(
         Request $request, 
         IncomesRepository $incomesRepository,
-        OutcomesRepository $outcomesRepository) : Response 
+        OutcomesRepository $outcomesRepository,
+        SessionInterface $session) : Response 
     {
         $searchIncomeForm = $this->createForm(SearchDataType::class);
         $searchIncomeForm->handleRequest($request);
-        $types = null;
-        
+        $incomes = null;
+        $outcomes =null;
         if ($searchIncomeForm->isSubmitted() && $searchIncomeForm->isValid()) { 
             $input = $searchIncomeForm->getData();
             //Verification des inputs
             $church = $this->getUser();
+            $outcomes = $outcomesRepository->findByMotif($input, $church);
+            $incomes = $incomesRepository->findByMotif($input, $church);
+
             if ($input['type'] == 'Incomes') 
             {
-                $incomes = $incomesRepository->findByMotif($input, $church);
-                $types = $incomes;
-
-            } else {
-                $outcomes = $outcomesRepository->findByMotif($input, $church);
-                $types= $outcomes;
-            }         
+                $outcomes = null;
+            } elseif ($input['type'] == 'Outcomes') {
+                $incomes = null;
+            }
         }
 
-        return $this->render('home/search.html.twig',[
+        $session->set('search_results', [
+            'incomes' => $incomes,
+            'outcomes' => $outcomes,
+        ]);
+        
+        return $this->render('printData/search.html.twig',[
             'slug' => 'Chart',
             'search_Form' => $searchIncomeForm->createView(),
-            'types' => $types,
-        ]);    
+            'incomes' => $incomes,
+            'outcomes' => $outcomes,
+        ]);   
+    }
+
+    #[Route('/home/search/printData', name: 'app_printData')]
+         
+    public function addPdf(SessionInterface $session) : Response 
+    {
+        $searchResults=$session->get('search_results', [
+            'incomes' => null,
+            'outcomes' => null,
+        ]);
+
+        $incomes = $searchResults['incomes'];
+        $outcomes = $searchResults['outcomes'];
+        return $this->render('printData/pdfData.html.twig',[
+            'slug' => 'View Pdf',
+            'incomes' => $incomes,
+            'outcomes' => $outcomes,
+        ]);     
+    }
+    
+    #[Route('/home/search/printData/Download', name: 'app_search_finances_report')]
+    
+    public function exportPdf(SessionInterface $session) : Response 
+    {
+        //Setting up pdf options
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->setIsRemoteEnabled(true);
+
+        $domPdf = new Dompdf($pdfOptions);
+        $context = stream_context_create([
+            'ssl' => ([ 
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+                'allow_self_signed' => TRUE
+            ]
+            )
+        ]);
+        $domPdf->setHttpContext($context);
+        $searchResults=$session->get('search_results', [
+            'incomes' => null,
+            'outcomes' => null,
+        ]);
+
+        $incomes = $searchResults['incomes'];
+        $outcomes = $searchResults['outcomes'];
+        $html = $this->renderView('printData/pdfData.html.twig', [
+            'slug' => 'View Pdf',
+            'incomes' => $incomes,
+            'outcomes' => $outcomes,
+        ]);
+
+        $domPdf->loadHtml($html);
+        $domPdf->setPaper('A4', 'portrait');
+        $domPdf->render();
+        $fichiers = $this->getUser()->getDesign() .'.pdf';
+        $domPdf->stream($fichiers, [
+            'Attachment' => true,
+        ]);
+
+        return new Response();
     }
 }

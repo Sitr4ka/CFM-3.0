@@ -1,0 +1,57 @@
+{% extends 'basePdf.html.twig' %}
+
+{% block body %}
+	{# Affichage des résultats#}
+	<div class='container-fluid mt-3'>
+		<div class="row mx-5">
+			<h5>Incomes</h5>
+			<div class="rounded-4 bg-light border-2 me-2 mb-2">
+				<table class="table table-borderless mt-2 table-light table-hover ">
+					<thead>
+						<tr class='row'>
+							<th class='col ps-5'>Date</th>
+							<th class='col'>Motif</th>
+							<th class='col'>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for income in incomes %}
+							<tr class='row'>
+								<td class='col ps-5'>{{income.executedAt|date('d-m-Y')}}</td>
+								<td class='col'>{{income.motif}}</td>
+								<td class='col'>{{income.amount}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		{# New Row #}
+		<div class="row mx-5">
+			<h5>Outgoing</h5>
+			<div class="rounded-4 bg-light border-2 me-2 mb-2">
+				<table class="table table-borderless mt-2 table-light table-hover ">
+					<thead>
+						<tr class='row'>
+							<th class='col ps-5'>Date</th>
+							<th class='col'>Motif</th>
+							<th class='col'>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for outcome in outcomes %}
+							<tr class='row'>
+								<td class='col ps-5'>{{outcome.executedAt|date('d-m-Y')}}</td>
+								<td class='col'>{{outcome.motif}}</td>
+								<td class='col'>{{outcome.amount}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class='row mx-5 mt-2'>
+			<a href='{{ path('app_search_finances_report') }}' class='btn btn-primary offset-10 col-2'>Download</a>
+		</div>
+	</div>
+{% endblock %}
