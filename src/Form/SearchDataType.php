@@ -25,9 +25,9 @@ class SearchDataType extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [
+                    'All' => 'All',
                     'Incomes' => 'Incomes',
                     'Outcomes' => 'Outcomes',
-                    'All' => 'All',
                 ],
                 'attr' => ['class' => 'form-control mb-2']
             ])

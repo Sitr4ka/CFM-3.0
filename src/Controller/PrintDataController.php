@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Incomes;
 use App\Form\SearchDataType;
 use App\Repository\ChurchesRepository;
 use App\Repository\IncomesRepository;
@@ -29,7 +30,10 @@ class PrintDataController extends AbstractController
     }
 
     #[Route('/home/dashboard', name: 'app_dashboard')]
-    public function dashboard(OutcomesRepository $outcomesRepository, IncomesRepository $incomesRepository) : Response
+    public function dashboard(
+        OutcomesRepository $outcomesRepository, 
+        IncomesRepository $incomesRepository
+        ) : Response
     {
         $user = $this->getUser();
                 $incomes = $incomesRepository->findBy([
@@ -60,31 +64,54 @@ class PrintDataController extends AbstractController
         $searchIncomeForm->handleRequest($request);
         $incomes = null;
         $outcomes =null;
+        $totalIncomes = 0;
+        $totalOutcomes = 0;
+
         if ($searchIncomeForm->isSubmitted() && $searchIncomeForm->isValid()) { 
             $input = $searchIncomeForm->getData();
+
             //Verification des inputs
             $church = $this->getUser();
             $outcomes = $outcomesRepository->findByMotif($input, $church);
             $incomes = $incomesRepository->findByMotif($input, $church);
-
+            
             if ($input['type'] == 'Incomes') 
             {
+                foreach ($incomes as $income) {
+                    $totalIncomes += $income->getAmount();
+                }
                 $outcomes = null;
             } elseif ($input['type'] == 'Outcomes') {
+                foreach ($outcomes as $outcome) {
+                    $totalOutcomes += $outcome->getAmount();
+                }
                 $incomes = null;
+            } else {
+                foreach ($outcomes as $outcome) {
+                    $totalOutcomes += $outcome->getAmount();
+                }
+                foreach ($incomes as $income) {
+                    $totalIncomes += $income->getAmount();
+                }
             }
+            $session->set('search_results', [
+                'incomes' => $incomes,
+                'outcomes' => $outcomes,
+                'totalIncomes' => $totalIncomes,
+                'totalOutcomes' => $totalOutcomes,
+                'startDate' => $input['startDate'],
+                'endDate' => $input['endDate'],
+            ]);
         }
-
-        $session->set('search_results', [
-            'incomes' => $incomes,
-            'outcomes' => $outcomes,
-        ]);
+        
         
         return $this->render('printData/search.html.twig',[
             'slug' => 'Chart',
             'search_Form' => $searchIncomeForm->createView(),
             'incomes' => $incomes,
             'outcomes' => $outcomes,
+            'totalOutcomes' => $totalOutcomes,
+            'totalIncomes' => $totalIncomes,
         ]);   
     }
 
@@ -95,14 +122,26 @@ class PrintDataController extends AbstractController
         $searchResults=$session->get('search_results', [
             'incomes' => null,
             'outcomes' => null,
+            'totalIncomes' => null,
+            'totalOutcomes' => null,
+            'startDate' => null,
+            'endDate' => null,
         ]);
 
         $incomes = $searchResults['incomes'];
         $outcomes = $searchResults['outcomes'];
+        $totalOutcomes = $searchResults['totalOutcomes'];
+        $totalIncomes = $searchResults['totalIncomes'];
+        $startDate = $searchResults['startDate'];
+        $endDate = $searchResults['endDate'];
         return $this->render('printData/pdfData.html.twig',[
             'slug' => 'View Pdf',
             'incomes' => $incomes,
             'outcomes' => $outcomes,
+            'totalOutcomes' => $totalOutcomes,
+            'totalIncomes' => $totalIncomes,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ]);     
     }
     
@@ -125,17 +164,31 @@ class PrintDataController extends AbstractController
             )
         ]);
         $domPdf->setHttpContext($context);
+
         $searchResults=$session->get('search_results', [
             'incomes' => null,
             'outcomes' => null,
+            'totalIncomes' => null,
+            'totalOutcomes' => null,
+            'startDate' => null,
+            'endDate' => null,
         ]);
 
         $incomes = $searchResults['incomes'];
         $outcomes = $searchResults['outcomes'];
+        $totalOutcomes = $searchResults['totalOutcomes'];
+        $totalIncomes = $searchResults['totalIncomes'];
+        $startDate = $searchResults['startDate'];
+        $endDate = $searchResults['endDate'];
+
         $html = $this->renderView('printData/pdfData.html.twig', [
             'slug' => 'View Pdf',
             'incomes' => $incomes,
             'outcomes' => $outcomes,
+            'totalOutcomes' => $totalOutcomes,
+            'totalIncomes' => $totalIncomes,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ]);
 
         $domPdf->loadHtml($html);

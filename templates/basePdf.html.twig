@@ -4,6 +4,26 @@
    <meta charset="UTF-8">
    <title>{% block title %}{% endblock %}</title>
    <link rel="stylesheet" href="{{ asset('assets/styles/bootstrap/bootstrap.min.css') }}"> 
+   <style>         
+         html, body {
+            width: 210mm;
+            height: 297mm;
+            margin: 0;
+            padding: 0;
+            }      
+         html {
+            border: 1px solid green;
+         }
+         table {
+            border-collapse: collapse;
+            width: 100%;
+         }
+         th, td {
+            border: solid 1px black;
+            width: 120px;
+            text-align: center;
+         }   
+   </style>
 </head>
 <body>
    {% block body %}

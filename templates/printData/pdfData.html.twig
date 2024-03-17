@@ -2,55 +2,66 @@
 
 {% block body %}
 	{# Affichage des résultats#}
-	<div class='container-fluid mt-3'>
-		<div class="row mx-5">
-			<h5>Incomes</h5>
-			<div class="rounded-4 bg-light border-2 me-2 mb-2">
-				<table class="table table-borderless mt-2 table-light table-hover ">
+	<div>
+		<h4 style='text-align: center'>Listes des transactions du <span>{{startDate |date('d/m/y')}}</span> au <span>{{endDate |date('d/m/y')}}</span></h4>
+		<div>
+			<h4>Incomes</h4>
+			<div>
+				<table>
 					<thead>
-						<tr class='row'>
-							<th class='col ps-5'>Date</th>
-							<th class='col'>Motif</th>
-							<th class='col'>Amount</th>
+						<tr>
+							<th>Date</th>
+							<th>Motif</th>
+							<th>Amount</th>
 						</tr>
 					</thead>
 					<tbody>
 						{% for income in incomes %}
-							<tr class='row'>
-								<td class='col ps-5'>{{income.executedAt|date('d-m-Y')}}</td>
-								<td class='col'>{{income.motif}}</td>
-								<td class='col'>{{income.amount}}</td>
+							<tr>
+								<td>{{income.executedAt|date('d-m-Y')}}</td>
+								<td>{{income.motif}}</td>
+								<td>{{income.amount}}</td>
 							</tr>
 						{% endfor %}
+							<tr>
+								<td style='font-weight: bold'>Total</td>
+								<td></td>
+								<td style='font-weight: bold'>{{totalIncomes}}</td>
+							</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
 		{# New Row #}
-		<div class="row mx-5">
-			<h5>Outgoing</h5>
-			<div class="rounded-4 bg-light border-2 me-2 mb-2">
-				<table class="table table-borderless mt-2 table-light table-hover ">
+		<div>
+			<h4>Outgoing</h4>
+			<div>
+				<table>
 					<thead>
-						<tr class='row'>
-							<th class='col ps-5'>Date</th>
-							<th class='col'>Motif</th>
-							<th class='col'>Amount</th>
+						<tr>
+							<th>Date</th>
+							<th>Motif</th>
+							<th>Amount</th>
 						</tr>
 					</thead>
 					<tbody>
 						{% for outcome in outcomes %}
-							<tr class='row'>
-								<td class='col ps-5'>{{outcome.executedAt|date('d-m-Y')}}</td>
-								<td class='col'>{{outcome.motif}}</td>
-								<td class='col'>{{outcome.amount}}</td>
+							<tr>
+								<td>{{outcome.executedAt|date('d-m-Y')}}</td>
+								<td>{{outcome.motif}}</td>
+								<td>{{outcome.amount}}</td>
 							</tr>
 						{% endfor %}
+							<tr>
+								<td style='font-weight: bold'>Total</td>
+								<td></td>
+								<td style='font-weight: bold'>{{totalOutcomes}}</td>
+							</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<div class='row mx-5 mt-2'>
+		<div>
 			<a href='{{ path('app_search_finances_report') }}' class='btn btn-primary offset-10 col-2'>Download</a>
 		</div>
 	</div>
