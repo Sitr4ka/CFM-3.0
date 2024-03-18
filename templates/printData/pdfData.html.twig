@@ -3,66 +3,82 @@
 {% block body %}
 	{# Affichage des résultats#}
 	<div>
-		<h4 style='text-align: center'>Listes des transactions du <span>{{startDate |date('d/m/y')}}</span> au <span>{{endDate |date('d/m/y')}}</span></h4>
-		<div>
-			<h4>Incomes</h4>
-			<div>
-				<table>
-					<thead>
-						<tr>
-							<th>Date</th>
-							<th>Motif</th>
-							<th>Amount</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for income in incomes %}
-							<tr>
-								<td>{{income.executedAt|date('d-m-Y')}}</td>
-								<td>{{income.motif}}</td>
-								<td>{{income.amount}}</td>
-							</tr>
-						{% endfor %}
-							<tr>
-								<td style='font-weight: bold'>Total</td>
-								<td></td>
-								<td style='font-weight: bold'>{{totalIncomes}}</td>
-							</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		{# New Row #}
-		<div>
-			<h4>Outgoing</h4>
-			<div>
-				<table>
-					<thead>
-						<tr>
-							<th>Date</th>
-							<th>Motif</th>
-							<th>Amount</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for outcome in outcomes %}
-							<tr>
-								<td>{{outcome.executedAt|date('d-m-Y')}}</td>
-								<td>{{outcome.motif}}</td>
-								<td>{{outcome.amount}}</td>
-							</tr>
-						{% endfor %}
-							<tr>
-								<td style='font-weight: bold'>Total</td>
-								<td></td>
-								<td style='font-weight: bold'>{{totalOutcomes}}</td>
-							</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<div>
-			<a href='{{ path('app_search_finances_report') }}' class='btn btn-primary offset-10 col-2'>Download</a>
-		</div>
+		<table style='margin-top: 40px'>
+			<thead>
+				<tr>
+					<th style='border: none'></th>
+					<th style='border: none'>Cash transactions</th>
+					<th style='border: none'></th>
+				</tr>
+			</thead>
+		</table>
+		{# <h4 style='text-align: center; text-decoration: underline'>Transactions list</h4> #}
+		<p style='font-weight: bold'>
+			Design:
+			<span style='font-weight: normal'>{{design}}</span>
+		</p>
+		<p style='font-weight: bold'>
+			Date:
+			<span style='font-weight: normal'>{{startDate|default('') ?  startDate | date('d/m/y'): '' }}</span>
+			<span style='font-weight: normal'>
+			{{endDate ? endDate | date('- d/m/y'): ''}}
+		</p>
+	</span>
+</p>
+<div>
+	<h5>Cash inflows</h5>
+	<div>
+		<table>
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Motif</th>
+					<th>Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for income in incomes %}
+					<tr>
+						<td>{{income.executedAt|date('d-m-Y')}}</td>
+						<td>{{income.motif}}</td>
+						<td>{{income.amount}}</td>
+					</tr>
+				{% endfor %}
+				<tr>
+					<td style='font-weight: bold'>Total</td>
+					<td></td>
+					<td style='font-weight: bold'>{{totalIncomes}}</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
-{% endblock %}
+</div>
+{# New Row #}
+<div>
+	<h5>Cash Outflows</h5>
+	<div>
+		<table>
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Motif</th>
+					<th>Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for outcome in outcomes %}
+					<tr>
+						<td>{{outcome.executedAt|date('d-m-Y')}}</td>
+						<td>{{outcome.motif}}</td>
+						<td>{{outcome.amount}}</td>
+					</tr>
+				{% endfor %}
+				<tr>
+					<td style='font-weight: bold'>Total</td>
+					<td></td>
+					<td style='font-weight: bold'>{{totalOutcomes}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div></div>{% endblock %}

@@ -15,8 +15,8 @@
                     {% endif %}
 
                     {% if app.user %}
-                        <div class="mb-3">
-                            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                        <div class="my-3 mx-2 text-center text-warning">
+                            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}" class='btn btn-warning '>Logout</a>
                         </div>
                     {% endif %}
 
@@ -29,10 +29,12 @@
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 <div class= 'container'>
                     <div class = 'row'>   
-                        <div class='col-3 me-2 '></div> 
-                        <button class="btn btn-lg btn-primary mb-2 col-5" type="submit">
+                        <button class="btn btn-lg btn-success ms-2 mb-2 col-5" type="submit">
                             Sign in
                         </button>
+                        <a href='{{ path('app_register') }}' class="btn btn-lg btn-primary ms-4 mb-2 col-5" type="submit">
+                            Sign up
+                        </a>
                     </div>
                 </div>
                 </form>

@@ -114,36 +114,6 @@ class PrintDataController extends AbstractController
             'totalIncomes' => $totalIncomes,
         ]);   
     }
-
-    #[Route('/home/search/printData', name: 'app_printData')]
-         
-    public function addPdf(SessionInterface $session) : Response 
-    {
-        $searchResults=$session->get('search_results', [
-            'incomes' => null,
-            'outcomes' => null,
-            'totalIncomes' => null,
-            'totalOutcomes' => null,
-            'startDate' => null,
-            'endDate' => null,
-        ]);
-
-        $incomes = $searchResults['incomes'];
-        $outcomes = $searchResults['outcomes'];
-        $totalOutcomes = $searchResults['totalOutcomes'];
-        $totalIncomes = $searchResults['totalIncomes'];
-        $startDate = $searchResults['startDate'];
-        $endDate = $searchResults['endDate'];
-        return $this->render('printData/pdfData.html.twig',[
-            'slug' => 'View Pdf',
-            'incomes' => $incomes,
-            'outcomes' => $outcomes,
-            'totalOutcomes' => $totalOutcomes,
-            'totalIncomes' => $totalIncomes,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-        ]);     
-    }
     
     #[Route('/home/search/printData/Download', name: 'app_search_finances_report')]
     
@@ -164,7 +134,7 @@ class PrintDataController extends AbstractController
             )
         ]);
         $domPdf->setHttpContext($context);
-
+//** */
         $searchResults=$session->get('search_results', [
             'incomes' => null,
             'outcomes' => null,
@@ -182,6 +152,7 @@ class PrintDataController extends AbstractController
         $endDate = $searchResults['endDate'];
 
         $html = $this->renderView('printData/pdfData.html.twig', [
+            'design' => $this->getUser()->getDesign(),
             'slug' => 'View Pdf',
             'incomes' => $incomes,
             'outcomes' => $outcomes,
@@ -190,7 +161,7 @@ class PrintDataController extends AbstractController
             'startDate' => $startDate,
             'endDate' => $endDate,
         ]);
-
+/** */
         $domPdf->loadHtml($html);
         $domPdf->setPaper('A4', 'portrait');
         $domPdf->render();

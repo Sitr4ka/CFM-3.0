@@ -26,6 +26,7 @@ class IncomeController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) { 
                 $income->setChurches($church);
+                $income->setMotif(ucwords($income->getMotif()));
                 $em->persist($income);
                 $em->flush();
 
@@ -67,6 +68,7 @@ class IncomeController extends AbstractController
                         'Please verify your solde',
                     );  
                 } else { 
+                    $income->setMotif(ucwords($income->getMotif()));
                     $em->persist($income);
                     $em->flush();
                     $church->updateIncomes($iR,$em, $church);

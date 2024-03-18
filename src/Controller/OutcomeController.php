@@ -34,7 +34,8 @@ class OutcomeController extends AbstractController
                         'Please verify your solde',
                     );               
                 } else { 
-                $outcome->setChurches($church);         
+                $outcome->setChurches($church);   
+                $outcome->setMotif(ucwords($outcome->getMotif()));   
                 $em->persist($outcome);
                 $em->flush();
                 
@@ -73,6 +74,7 @@ class OutcomeController extends AbstractController
                 $valid = ($incomes - $outgoing) >= 10000;
 
                 if($valid) { 
+                $outcomes->setMotif(ucwords($outcomes->getMotif()));   
                 $em->persist($outcomes);
                 $em->flush();
                 $church->updateOutgoing($oR, $em, $church);

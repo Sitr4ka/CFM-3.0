@@ -3,30 +3,44 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <div class='container mt-5 '>
+
+{ 
+    <div class='container mt-5'>
 		<div class='row justify-content-center '>
-			<div class='col-4'>
-			</div>	
-			<div class='col-3 border rounded-3  '>
-                <h1>Register</h1>
-            
-            
+			<div class='col-8'></div>	
+			<div class='col-3 border rounded-4 '>                
                 {{ form_errors(registrationForm) }}
             
                 {{ form_start(registrationForm) }}
+                    <h3 class='mb-3 font-weight-normal mt-2 text-center' >Register</h3>
                     {{ form_row(registrationForm.design) }}
                     {{ form_row(registrationForm.username) }}
                     {{ form_row(registrationForm.plainPassword, {
                         label: 'Password'
                     }) }}
                     {{ form_row(registrationForm.confirmMyRegistration) }}
+
+                <div class= 'container mt-2 '>
+                    <div class = 'row'>   
+                        <button type="submit" class="btn btn-lg btn-success ms-2 mb-2 col-5">
+                            Sign up
+                        </button>
+                        <a href='{{ path('app_login') }}' class="btn btn-lg btn-primary ms-4 mb-2 col-5" type="submit">
+                            Sign in
+                        </a>
+                    </div>
+                </div>
             
-                    <button type="submit" class="btn btn-primary ">Register</button>
+
                 {{ form_end(registrationForm) }}
 			</div>	
-			<div class='col-4'>
+			<div class='col-1'>
 
 			</div>		
 		</div>
     </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/styles/login.css') }}"> 
 {% endblock %}
