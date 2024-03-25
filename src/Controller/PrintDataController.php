@@ -6,7 +6,6 @@ use App\Form\SearchDataType;
 use App\Repository\ChurchesRepository;
 use App\Repository\IncomesRepository;
 use App\Repository\OutcomesRepository;
-use DateTimeImmutable;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -51,16 +50,28 @@ class PrintDataController extends AbstractController
                                 'executedAt' => 'ASC'
                             ]);
 
+        /* Chart Data settings */
+        $previousMonth = new \DateTime('first day of last month');
+        $actualMonth = new \DateTime('last day of this month');
+        $startDate = $previousMonth->format('Y-m-d');
+        $endDate = $actualMonth->format('Y-m-d');
+                $incomesMonth = $incomesRepository->findByLastMonth($startDate, $endDate, $user);
                 $dataIn = [];
                 $date = null;
-                foreach ($incomes as $income) {
+                foreach ($incomesMonth as $income) {
                     $week = $income->getExecutedAt()->format('W-Y');
-                    
-                    if (!isset($dataIn[$week])) {
-                        $dataIn[$week] = 0;
-                        $date[] = $week;
+                    // Divisez la chaîne de semaine en numéro de semaine et année
+                    list($weekNumber, $year) = explode('-', $week);
+                    // Obtenez la date du premier jour de la semaine à partir du numéro de semaine et de l'année
+                    $firstDayOfWeek = strtotime($year . 'W' . $weekNumber);  
+                    // Formattez la date pour obtenir le lundi de cette semaine
+                    $dateLundi = date('d-M', $firstDayOfWeek);    
+                                          
+                    if (!isset($dataIn[$dateLundi])) {
+                        $dataIn[$dateLundi] = 0;
+                        $date[] = $dateLundi;
                     }
-                    $dataIn[$week] += $income->getAmount();
+                    $dataIn[$dateLundi] += $income->getAmount();
                 }
                 $dataOut = [];
                 foreach ($outcomes as $outcome) {
@@ -99,7 +110,6 @@ class PrintDataController extends AbstractController
 
         if ($searchIncomeForm->isSubmitted() && $searchIncomeForm->isValid()) { 
             $input = $searchIncomeForm->getData();
-
             //Verification des inputs
             $outcomes = $outcomesRepository->findByMotif($input, $church);
             $incomes = $incomesRepository->findByMotif($input, $church);

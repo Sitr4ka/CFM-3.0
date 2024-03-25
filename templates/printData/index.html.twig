@@ -14,15 +14,13 @@
 {% endblock %}
 
 {% block main %}
-	<div class='container-fluid mt-3'>
-		<div class="row mx-2 ">
-		<div class="col-sm-0 col-lg-2"></div>
-			<div class=" col-sm-12 col-lg-8 rounded-4 bg-light border-2">
+	<div class='container-fluid mt-4'>
+		<div class="row justify-content-center">
+			<div class=" col-sm-12 col-lg-5 rounded-4 bg-light border-2 ps-lg-5">
 				<table class="table table-borderless mt-2 table-light table-hover ">
 					<thead>
 						<tr>
 							<th>Designation</th>
-							<th>Username</th>
 							<th>City</th>
 
 						</tr>
@@ -31,14 +29,12 @@
 						{% for church in churches %}
 							<tr>
 								<td>{{church.design}}</td>
-								<td>{{church.username}}</td>
 								<td>{{church.city}}</td>
 							</tr>
 						{% endfor %}
 					</tbody>
 				</table>
 			</div>
-			<div class="col-sm-0 col-lg-2"></div>
 		</div>
 	</div>
 {% endblock %}

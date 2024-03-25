@@ -8,7 +8,7 @@
     <div class='container mt-5 pt-5 '>
 		<div class='row justify-content-center '>
 			<div class='col-8'></div>	
-			<div class='col-3 border rounded-4'>
+			<div class='col-4 border rounded-5 px-5 border-2 '>
                 <form method="post">
                     {% if error %}
                         <div class="alert alert-danger mt-2 text-center ">User/password incorrect</div>
@@ -28,12 +28,12 @@
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 <div class= 'container'>
-                    <div class = 'row'>   
+                    <div class = 'row mb-2'>   
                         <button class="btn btn-lg btn-success" type="submit">
                             Sign in
                         </button>
-                        <a href='{{ path('app_register') }}' style='color: white' class="signUp text-center" >
-                            Create new account
+                        <a href='{{ path('app_register') }}' style='color: white' class="signUp text-center mt-1" >
+                            Registration
                         </a>
                     </div>
                 </div>

@@ -32,8 +32,7 @@ class IncomesRepository extends ServiceEntityRepository
         ->andWhere('i.motif LIKE :motif')
         ->setParameter('church', $church)
         ->setParameter('motif', '%'.$input['keyword'].'%')
-        ->orderBy('i.executedAt', 'ASC')
-        ->setMaxResults(10);
+        ->orderBy('i.executedAt', 'ASC');
 
             if (($input['startDate']) && ($input['endDate'])) {
                 $queryBuilder
@@ -43,6 +42,19 @@ class IncomesRepository extends ServiceEntityRepository
             }
 
         return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByLastMonth($startDate, $endDate, Churches $church)
+    {
+        return $this->createQueryBuilder('i')
+            ->where('i.churches = :church')
+            ->andWhere('i.executedAt BETWEEN :startDate AND :endDate')
+            ->setParameter('church', $church)
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->orderBy('i.executedAt', 'ASC')
             ->getQuery()
             ->getResult();
     }
