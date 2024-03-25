@@ -31,7 +31,7 @@ class IncomeRegistrationType extends AbstractType
             ])
             ->add('register', SubmitType::class, [
                 'label' => 'Register',
-                'attr' => ['class' => 'btn btn-primary']
+                'attr' => ['class' => 'btn btn-primary col-8 offset-2 mt-2']
             ])
         ;
     }

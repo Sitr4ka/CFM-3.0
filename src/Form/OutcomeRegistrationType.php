@@ -30,15 +30,9 @@ class OutcomeRegistrationType extends AbstractType
             ->add('amount', IntegerType::class, [
                 'attr' => ['class' => 'form-control mb-2'],
             ])
-/*             ->add('churches', EntityType::class, [
-                'class' => Churches::class,
-                'choice_label' => 'design',
-                'label' => 'Church',
-                'attr' => ['class' => 'form-control mb-2'],
-            ]) */
             ->add('register', SubmitType::class, [
                 'label' => 'Register',
-                'attr' => ['class' => 'btn btn-primary']
+                'attr' => ['class' => 'btn btn-primary col-8 offset-2 mt-2']
             ])
         ;
     }

@@ -39,6 +39,10 @@ class PrintDataController extends AbstractController
         ) : Response
     {
         $user = $this->getUser();
+        $balance = $user->getBalance();
+        $totalIncomes = $user->getIncomes();
+        $totalOutgoing = $user->getOutgoing();
+
                 $incomes = $incomesRepository->findBy([
                                 'churches' => $user,
                             ], [
@@ -49,12 +53,14 @@ class PrintDataController extends AbstractController
                             ], [
                                 'executedAt' => 'ASC'
                             ]);
+        
 
-        /* Chart Data settings */
+        /*Chart Data settings */
         $previousMonth = new \DateTime('first day of last month');
         $actualMonth = new \DateTime('last day of this month');
         $startDate = $previousMonth->format('Y-m-d');
         $endDate = $actualMonth->format('Y-m-d');
+
                 $incomesMonth = $incomesRepository->findByLastMonth($startDate, $endDate, $user);
                 $dataIn = [];
                 $date = null;
@@ -73,23 +79,34 @@ class PrintDataController extends AbstractController
                     }
                     $dataIn[$dateLundi] += $income->getAmount();
                 }
+                $outcomesMonth = $outcomesRepository->findByLastMonth($startDate, $endDate, $user);
                 $dataOut = [];
-                foreach ($outcomes as $outcome) {
+                $date2 =null;
+                foreach ($outcomesMonth as $outcome) {
                     $week2 = $outcome->getExecutedAt()->format('W-Y');
-                    
-                    if (!isset($dataOut[$week2])) {
-                        $dataOut[$week2] = 0;
+                    // Divisez la chaîne de semaine en numéro de semaine et année
+                    list($weekNumber2, $year2) = explode('-', $week2);
+                    // Obtenez la date du premier jour de la semaine à partir du numéro de semaine et de l'année
+                    $firstDayOfWeek2 = strtotime($year2 . 'W' . $weekNumber2);        
+                    // Formattez la date pour obtenir le lundi de cette semaine
+                    $dateLundi2 = date('d-M', $firstDayOfWeek2);         
+
+                    if (!isset($dataOut[$dateLundi2])) {
+                        $dataOut[$dateLundi2] = 0;
+                        $date2[] = $dateLundi2;
                     }
-                    $dataOut[$week2] += $outcome->getAmount();
+                    $dataOut[$dateLundi2] += $outcome->getAmount();
                 }
         return $this->render('printData/dashboard.html.twig', [
         'slug' => 'Dashboard',
         'outcomes' => $outcomes,
         'incomes' => $incomes,
         'date' => json_encode($date),
+        'date2' => json_encode($date2),
         'dataIn' => json_encode($dataIn),
         'dataOut' => json_encode($dataOut),
         'user' => $user->getDesign(),
+        'church' => $user,
         ]);
     }
 
@@ -120,7 +137,7 @@ class PrintDataController extends AbstractController
                     $totalIncomes += $income->getAmount();
                 }
                 $outcomes = null;
-            } elseif ($input['type'] == 'Outcomes') {
+            } elseif ($input['type'] == 'Expenses') {
                 foreach ($outcomes as $outcome) {
                     $totalOutcomes += $outcome->getAmount();
                 }

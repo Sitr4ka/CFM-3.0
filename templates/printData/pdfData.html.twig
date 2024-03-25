@@ -33,7 +33,7 @@
 				<tr>
 					<th>Date</th>
 					<th>Motif</th>
-					<th>Amount (Ar)</th>
+					<th>Amount</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -41,13 +41,13 @@
 					<tr>
 						<td>{{income.executedAt|date('d-m-Y')}}</td>
 						<td>{{income.motif}}</td>
-						<td>{{income.amount}}</td>
+						<td>{{income.amount|number_format('0', ',', '.') }} Ar</td>
 					</tr>
 				{% endfor %}
 				<tr>
 					<td style='font-weight: bold'>Total</td>
 					<td></td>
-					<td style='font-weight: bold'>{{totalIncomes}}</td>
+					<td style='font-weight: bold'>{{totalIncomes|number_format('0', ',', '.') }} Ar</td>
 				</tr>
 			</tbody>
 		</table>
@@ -62,7 +62,7 @@
 				<tr>
 					<th>Date</th>
 					<th>Motif</th>
-					<th>Amount (Ar)</th>
+					<th>Amount</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -70,13 +70,13 @@
 					<tr>
 						<td>{{outcome.executedAt|date('d-m-Y')}}</td>
 						<td>{{outcome.motif}}</td>
-						<td>{{outcome.amount}}</td>
+						<td>{{outcome.amount|number_format('0', ',', '.') }} Ar</td>
 					</tr>
 				{% endfor %}
 				<tr>
 					<td style='font-weight: bold'>Total</td>
 					<td></td>
-					<td style='font-weight: bold'>{{totalOutcomes}}</td>
+					<td style='font-weight: bold'>{{totalOutcomes|number_format('0', ',', '.') }} Ar</td>
 				</tr>
 			</tbody>
 		</table>

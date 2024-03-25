@@ -46,5 +46,17 @@ class OutcomesRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findByLastMonth($startDate, $endDate, Churches $church)
+    {
+        return $this->createQueryBuilder('i')
+            ->where('i.churches = :church')
+            ->andWhere('i.executedAt BETWEEN :startDate AND :endDate')
+            ->setParameter('church', $church)
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->orderBy('i.executedAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
 }

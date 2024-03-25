@@ -11,6 +11,16 @@
 			max-height: 250px;
 			overflow: auto;		
 		}
+
+		div.btn-income {
+			background-color: #513d94d0;
+			color: white;
+		}
+
+		div.btn-income:hover {
+			background-color: #513d94;
+			color: white;
+		}
 	</style>	
 {% endblock %}
 
@@ -20,6 +30,22 @@
 
 {% block main %}
 	<div class='container-fluid mt-3'>
+		<div class='row  pe-3 mx-5'>
+			<div class='d-flex justify-content-between mb-3'>
+				<div class='btn btn-income rounded-4 py-3 px-5'>
+					<h6>Income</h6>
+					<h4>{{church.incomes|number_format('0', ',', '.') }} Ar</h4>
+				</div>
+				<div class='btn btn-danger rounded-4 py-3 px-5'>
+					<h6>Expense</h6>
+					<h4>{{church.outgoing|number_format('0', ',', '.') }} Ar</h4>
+				</div>
+				<div class='btn bg-light rounded-4 py-3 px-5'>
+					<h6> Solde</h6>
+					<h4>{{church.balance|number_format('0', ',', '.') }} Ar</h4>
+				</div>
+			</div>
+		</div>
 		<div class="row ms-5">
 			<div class="col-sm-12 col-lg-5 rounded-4 bg-light border-2 me-2 mb-2">
 				<h5 class='mt-3 ms-3'>INCOMES</h5>
@@ -37,7 +63,7 @@
 								<tr>
 									<td>{{income.executedAt|date('d-m-Y')}}</td>
 									<td>{{income.motif}}</td>
-									<td>{{income.amount}}</td>
+									<td>{{income.amount|number_format('0', ',', '.') }} Ar</td>
 									<td>
 										<a href="{{ path('app_editIncome', {id: income.id} ) }}" class="btn edit">
 											<i class='lni lni-pencil-alt'></i>
@@ -75,7 +101,7 @@
 								<tr>
 									<td>{{outcome.executedAt|date('d-m-Y')}}</td>
 									<td>{{outcome.motif}}</td>
-									<td>{{outcome.amount}}</td>
+									<td>{{ outcome.amount|number_format('0', ',', '.') }} Ar</td>
 									<td>
 										<a href="{{ path('app_editOutcome', {id: outcome.id} ) }}" class="btn edit">
 											<i class='lni lni-pencil-alt'></i>
@@ -106,9 +132,9 @@
 			data: {
 				labels: {{ date|raw }},
 				datasets: [{
-				label: 'Income',
-				data: {{ dataIn|raw }},
-				borderWidth: 1
+					label: 'Income',
+					data: {{ dataIn|raw }},
+					backgroundColor: '#513d94d0',
 				}]
 			},
 			options: {
@@ -122,11 +148,11 @@
 				new Chart(ctx2, {
 			type: 'bar',
 			data: {
-				labels: {{ date|raw }},
+				labels: {{ date2|raw }},
 				datasets: [{
 				label: 'expense',
 				data: {{ dataOut|raw }},
-				borderWidth: 1,
+				backgroundColor: '#ff0000d0',
 				}]
 			},
 			options: {

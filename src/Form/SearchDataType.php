@@ -27,7 +27,7 @@ class SearchDataType extends AbstractType
                 'choices' => [
                     'All' => 'All',
                     'Incomes' => 'Incomes',
-                    'Outcomes' => 'Outcomes',
+                    'Expenses' => 'Expenses',
                 ],
                 'attr' => ['class' => 'form-control mb-2']
             ])
