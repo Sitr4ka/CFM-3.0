@@ -1,7 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" href="{{ asset('assets/styles/base.css') }}">
+	<style>
+		.home {
+			background-color: rgba(255, 255, 255, .075);
+    		border-left: 3px solid #3b7ddd;
+		}
+	</style>
+{% endblock %}
+
+{% block title %}
+	{{ parent() }} | Home	
 {% endblock %}
 
 {% block main %}
@@ -31,7 +40,6 @@
 						{% endfor %}
 					</tbody>
 				</table>
-
 			</div>
 			<div class="col-sm-0 col-lg-2"></div>
 		</div>

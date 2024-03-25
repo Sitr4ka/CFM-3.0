@@ -1,7 +1,25 @@
-<nav class="navbar navbar-expand px-3 border-bottom">
-	<!-- Button for sidebar toggle -->
-	<button class="btn" type="button" data-bs-theme="dark">
-		<i class="lni lni-grid-alt"></i>
-	</button>
-	<h4 class=''>{{slug}} </h4>
+<nav class="navbar navbar-expand px-3 border-bottom d-flex justify-content-between ">
+	<div class='d-flex align-items-center'>
+		<button class="btn" type="button" data-bs-theme="dark">
+			<i class="lni lni-grid-alt"></i>
+		</button>
+		<h4 class=''>{{slug}} </h4>
+	</div>
+	<p class='d-flex align-items-center my-0 me-3 bg-info rounded rounded-3'>
+		<i class='lni lni-user pe-2 ps-2'></i>
+		<span class='py-2 pe-3'>{{user}}</span>
+	</p>
 </nav>
+
+{% block stylesheets %}
+	<style>
+		.lni-user {
+			color: #125c7c;
+    		font-weight: 600;
+    		font-size: 20px;
+		}
+		p {
+			cursor: pointer;
+		}
+	</style>
+{% endblock %}

@@ -11,7 +11,7 @@
 			<div class='col-3 border rounded-4'>
                 <form method="post">
                     {% if error %}
-                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        <div class="alert alert-danger mt-2 text-center ">User/password incorrect</div>
                     {% endif %}
 
                     {% if app.user %}
@@ -29,11 +29,11 @@
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 <div class= 'container'>
                     <div class = 'row'>   
-                        <button class="btn btn-lg btn-success ms-2 mb-2 col-5" type="submit">
+                        <button class="btn btn-lg btn-success" type="submit">
                             Sign in
                         </button>
-                        <a href='{{ path('app_register') }}' class="btn btn-lg btn-primary ms-4 mb-2 col-5" type="submit">
-                            Sign up
+                        <a href='{{ path('app_register') }}' style='color: white' class="signUp text-center" >
+                            Create new account
                         </a>
                     </div>
                 </div>
@@ -47,4 +47,9 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('assets/styles/login.css') }}"> 
+    <style>
+        .signUp:hover {
+            text-decoration: underline;
+        }
+    </style>
 {% endblock %}

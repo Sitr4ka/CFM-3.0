@@ -39,6 +39,7 @@ class IncomeController extends AbstractController
                 return $this->redirectToRoute('app_dashboard');
             }
             return $this->render('home/income/registration.html.twig',[
+                'user' => $church->getDesign(),
                 'slug' => 'Income Registration',
                 'incomes' => $form,
             ]);
@@ -80,6 +81,7 @@ class IncomeController extends AbstractController
                 }
             }
             return $this->render('home/income/edit.html.twig',[
+                'user' => $church->getDesign(),
                 'incomes' =>  $form->createView(),
                 'slug' => "Income Modifications"
             ]);

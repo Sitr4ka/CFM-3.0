@@ -22,11 +22,11 @@
 
                 <div class= 'container mt-2 '>
                     <div class = 'row'>   
-                        <button type="submit" class="btn btn-lg btn-success ms-2 mb-2 col-5">
+                        <button type="submit" class="btn btn-lg btn-success">
                             Sign up
                         </button>
-                        <a href='{{ path('app_login') }}' class="btn btn-lg btn-primary ms-4 mb-2 col-5" type="submit">
-                            Sign in
+                        <a href='{{ path('app_login') }}' style='color: white' class="signIn text-center">
+                            I already have an account
                         </a>
                     </div>
                 </div>
@@ -43,4 +43,9 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('assets/styles/login.css') }}"> 
+    <style>
+        .signIn:hover {
+            text-decoration: underline;
+        }
+    </style>
 {% endblock %}

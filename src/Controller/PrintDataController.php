@@ -22,8 +22,12 @@ class PrintDataController extends AbstractController
     #[Route('/home', name: 'app_home')]
     public function index(ChurchesRepository $repository): Response
     {
+        if ( !($user = $this->getUser())) {
+            return $this->redirectToRoute('app_login');
+        }
         $churches = $repository->findAll();     
         return $this->render('printData/index.html.twig', [
+            'user' => $user->getDesign(),
             'slug' => 'Welcome to CFM',
             'churches' => $churches,
         ]);
@@ -32,24 +36,48 @@ class PrintDataController extends AbstractController
     #[Route('/home/dashboard', name: 'app_dashboard')]
     public function dashboard(
         OutcomesRepository $outcomesRepository, 
-        IncomesRepository $incomesRepository
+        IncomesRepository $incomesRepository,
         ) : Response
     {
         $user = $this->getUser();
                 $incomes = $incomesRepository->findBy([
-            'churches' => $user,
-        ], [
-            'executedAt' => 'ASC'      
-        ]);
-        $outcomes = $outcomesRepository->findBy([
-            'churches' => $user,
-        ], ['executedAt' => 'ASC'
-        ]);
-// dd($outcomes);
+                                'churches' => $user,
+                            ], [
+                                'executedAt' => 'ASC'      
+                            ]);
+                $outcomes = $outcomesRepository->findBy([
+                                'churches' => $user,
+                            ], [
+                                'executedAt' => 'ASC'
+                            ]);
+
+                $dataIn = [];
+                foreach ($incomes as $income) {
+                    $week = $income->getExecutedAt()->format('W-Y');
+                    
+                    if (!isset($dataIn[$week])) {
+                        $dataIn[$week] = 0;
+                        $date[] = $week;
+                    }
+                    $dataIn[$week] += $income->getAmount();
+                }
+                $dataOut = [];
+                foreach ($outcomes as $outcome) {
+                    $week2 = $outcome->getExecutedAt()->format('W-Y');
+                    
+                    if (!isset($dataOut[$week2])) {
+                        $dataOut[$week2] = 0;
+                    }
+                    $dataOut[$week2] += $outcome->getAmount();
+                }
         return $this->render('printData/dashboard.html.twig', [
         'slug' => 'Dashboard',
         'outcomes' => $outcomes,
         'incomes' => $incomes,
+        'date' => json_encode($date),
+        'dataIn' => json_encode($dataIn),
+        'dataOut' => json_encode($dataOut),
+        'user' => $user->getDesign(),
         ]);
     }
 
@@ -66,12 +94,12 @@ class PrintDataController extends AbstractController
         $outcomes =null;
         $totalIncomes = 0;
         $totalOutcomes = 0;
+        $church = $this->getUser();
 
         if ($searchIncomeForm->isSubmitted() && $searchIncomeForm->isValid()) { 
             $input = $searchIncomeForm->getData();
 
             //Verification des inputs
-            $church = $this->getUser();
             $outcomes = $outcomesRepository->findByMotif($input, $church);
             $incomes = $incomesRepository->findByMotif($input, $church);
             
@@ -103,15 +131,15 @@ class PrintDataController extends AbstractController
                 'endDate' => $input['endDate'],
             ]);
         }
-        
-        
+    
         return $this->render('printData/search.html.twig',[
-            'slug' => 'Chart',
+            'slug' => 'Search',
             'search_Form' => $searchIncomeForm->createView(),
             'incomes' => $incomes,
             'outcomes' => $outcomes,
             'totalOutcomes' => $totalOutcomes,
             'totalIncomes' => $totalIncomes,
+            'user' => $church->getDesign(),
         ]);   
     }
     

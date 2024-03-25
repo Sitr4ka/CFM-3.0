@@ -1,9 +1,31 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+	<style>
+		.modify { 
+			background-color: rgba(255, 255, 255, .075);
+	   	border-left: 3px solid #3b7ddd;
+		}
+
+		.income {
+			max-height: 350px;
+			overflow: auto;		
+		}
+		.expenses {
+			max-height: 350px;
+			overflow: auto;		
+		}
+	</style>	
+{% endblock %}
+
+{% block title %}
+{{ parent() }} | Edit 	
+{% endblock %}
+
 {% block main %}
 	<div class='container-fluid mt-3'>
 		<div class="row ms-5">
-			<div class=" col-sm-12 col-lg-5 rounded-4 bg-light border-2 me-2 mb-2">
+			<div class=" income col-sm-12 col-lg-5 rounded-4 bg-light border-2 me-2 mb-2">
 				<h5 class='mt-3 ms-3'>INCOMES</h5>
 				<table class="table table-borderless mt-2 table-light table-hover ">
 					<thead>
@@ -32,7 +54,12 @@
 					</tbody>
 				</table>
 			</div>
-			<div class=" col-sm-12 col-lg-6 rounded-4 bg-light border-2 ms-2 mb-2">
+			<div class="col-sm-12 col-lg-6 rounded-4 bg-light border-2 ms-2 mb-2">
+				<canvas id="myChart" class='mt-5' ></canvas>
+			</div>
+		</div>
+		<div class="row ms-5">
+			<div class="expenses col-sm-12 col-lg-5 rounded-4 bg-light border-2 me-2 mb-2">
 				<h5 class='mt-3 ms-3'>
 					EXPENSES
 				</h5>
@@ -63,6 +90,52 @@
 					</tbody>
 				</table>
 			</div>
-		</div>
+			<div class=" col-sm-12 col-lg-6 rounded-4 bg-light border-2 ms-2 mb-2">
+				<canvas id="expensesChart" class='mt-5'></canvas>
+			</div>
+		</div>	
 	</div>
+{% endblock %}
+
+{% block script %}
+	<script>
+  	const ctx = document.getElementById('myChart');
+	const ctx2 = document.getElementById('expensesChart');
+		new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: {{ date|raw }},
+				datasets: [{
+				label: 'Income',
+				data: {{ dataIn|raw }},
+				borderWidth: 1
+				}]
+			},
+			options: {
+				scales: {
+				y: {
+					beginAtZero: true
+				}
+				}
+			}
+		});
+				new Chart(ctx2, {
+			type: 'bar',
+			data: {
+				labels: {{ date|raw }},
+				datasets: [{
+				label: 'expense',
+				data: {{ dataOut|raw }},
+				borderWidth: 1,
+				}]
+			},
+			options: {
+				scales: {
+				y: {
+					beginAtZero: true
+				}
+				}
+			}
+		});
+</script>
 {% endblock %}

@@ -49,8 +49,9 @@ class OutcomeController extends AbstractController
                 }
             }
             return $this->render('home/outcome/registration.html.twig',[
-            'slug' => 'Outcome Registration',
+            'slug' => 'Expenditure Registration',
             'outcomes' => $form,
+            'user' => $church->getDesign(),
         ]);
         }
         
@@ -92,7 +93,8 @@ class OutcomeController extends AbstractController
             }
             return $this->render('home/outcome/edit.html.twig',[
                 'outcomes' =>  $form->createView(),
-                'slug' => "Income Modifications"
+                'slug' => "Income Modifications",
+                'user' => $church->getDesign(),
             ]);
         }
     /* 

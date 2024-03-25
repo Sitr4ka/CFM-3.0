@@ -11,47 +11,82 @@
 	</header>
 	<!-- Sidebar Navigation-->
 	<ul class="sidebar-nav py-0">
-		<li class="sidebar-item">
+		<li class="sidebar-item home">
 			<a href="{{ path('app_home') }}" class="sidebar-link">
 				<i class="lni lni-home pe-2"></i>
 				<span>Home</span>
 			</a>
 		</li>
 		<li class="sidebar-item">
-			<a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#transaction" aria-expanded="false" aria-controls="transaction">
+			<a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
+				data-bs-target="#transaction" aria-expanded="false" aria-controls="transaction">
 				<i class="lni lni-wallet pe-2"></i>
 				<span>Transactions</span>
 			</a>
-			<ul id="transaction" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-				<li class="sidebar-item">
+			<ul id="transaction" class="sidebar-dropdown list-unstyled 
+				{% if (app.request.get('_route') != 'app_income') and (app.request.get('_route') != 'app_outcome')%}
+					collapse
+				{% endif %}" 
+				data-bs-parent="#sidebar">
+				<li class="sidebar-item income">
 					<a href="{{ path('app_income') }}" class="sidebar-link">
 						Income
 					</a>
 				</li>
-				<li class="sidebar-item">
+				<li class="sidebar-item expenditure">
 					<a href="{{ path('app_outcome') }}" class="sidebar-link">
 						Expenditure
 					</a>
 				</li>
 			</ul>
 		</li>
-		<li class="sidebar-item">
-		<li class="sidebar-item">
+
+		<li class="sidebar-item modify">
 			<a href="{{ path('app_dashboard') }}" class="sidebar-link">
 				<i class="lni lni-pencil pe-2"></i>
 				<span>Edit</span>
 			</a>
 		</li>
+		<li class="sidebar-item find">
 			<a href="{{ path('app_search') }}" class="sidebar-link">
 				<i class="lni lni-search-alt pe-2"></i>
 				<span>Search</span>
 			</a>
 		</li>
 	</ul>
-	<div class="sidebar-footer">
+	<div class="sidebar-footer ">
         <a href="{{ path('app_logout') }}" class="sidebar-link">
             <i class="lni lni-exit"></i>
             <span class='ms-3'>Logout</span>
         </a>
     </div>
 </aside>
+
+{% block sidebarStyle %}
+	<style>
+	html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper {
+    display: flex;
+    height: 100%;
+}
+
+#sidebar {
+    flex: 0 0 auto; /* Empêche le redimensionnement du sidebar */
+    height: 100%;
+    overflow-y: auto;
+	 overflow-x:  /* Permet le défilement si le contenu dépasse */
+}
+
+.main {
+    flex: 1; /* Prendra l'espace restant */
+    overflow-y: auto; /* Permet le défilement si le contenu dépasse */
+}
+	</style>
+{% endblock %}
+
