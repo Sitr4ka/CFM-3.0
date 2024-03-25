@@ -5,7 +5,7 @@
 {% block body %}
 
 { 
-    <div class='container mt-5'>
+    <div class='container mt-4'>
 		<div class='row justify-content-center '>
 			<div class='col-8'></div>	
 			<div class='col-3 border rounded-4 '>                
@@ -15,17 +15,18 @@
                     <h3 class='mb-3 font-weight-normal mt-2 text-center' >Register</h3>
                     {{ form_row(registrationForm.design) }}
                     {{ form_row(registrationForm.username) }}
+                    {{ form_row(registrationForm.city) }}
                     {{ form_row(registrationForm.plainPassword, {
                         label: 'Password'
                     }) }}
                     {{ form_row(registrationForm.confirmMyRegistration) }}
 
-                <div class= 'container mt-2 '>
+                <div class= 'container mt-2 mb-3'>
                     <div class = 'row'>   
                         <button type="submit" class="btn btn-lg btn-success">
                             Sign up
                         </button>
-                        <a href='{{ path('app_login') }}' style='color: white' class="signIn text-center">
+                        <a href='{{ path('app_login') }}' style='color: white' class="signIn text-center mt-1">
                             I already have an account
                         </a>
                     </div>

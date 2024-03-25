@@ -48,6 +48,9 @@ class Churches implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?int $outgoing = null;
 
+    #[ORM\Column(length: 30)]
+    private ?string $city = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -170,6 +173,17 @@ class Churches implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): static
+    {
+        $this->city = $city;
+
+        return $this;
+    } 
 
     public function updateBalance(Churches $church, EntityManagerInterface $em) : void 
     {
@@ -223,5 +237,6 @@ class Churches implements UserInterface, PasswordAuthenticatedUserInterface
 
         //Updating balance
         $church->updateBalance($church, $em);
-    } 
+    }
+
 }

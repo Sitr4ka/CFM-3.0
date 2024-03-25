@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Incomes;
 use App\Form\IncomeRegistrationType;
 use App\Repository\IncomesRepository;
+use App\Repository\OutcomesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,15 +92,32 @@ class IncomeController extends AbstractController
      * REMOVE
      */
         #[Route('/home/income/delete/{id}', name: 'app_deleteIncome')]
-        public function deleteIncome(EntityManagerInterface $em, Incomes $income, IncomesRepository $incomesRepository): Response
+        public function deleteIncome(
+            EntityManagerInterface $em, 
+            Incomes $income, 
+            IncomesRepository $incomesRepository,
+            OutcomesRepository $outcomesRepository,): Response
         {   
             $amount = $income->getAmount();
             $church = $this->getUser();
             $incomes = $church->getIncomes();
             $outgoing = $church->getOutgoing();
 
+        /*Conditions verification */
+            $totalOutcomes = 0;
+            $outcomes = $outcomesRepository->findBy([
+                'churches' => $church,
+            ], [
+                'executedAt' => 'ASC'
+            ]);
+
+            foreach ($outcomes as $outcome) {
+                $totalOutcomes += $outcome->getAmount();
+            }
+
             $nextIncomes = $incomes - $amount;
-            $valid = $nextIncomes - $outgoing >= 10000;
+            $diff = $nextIncomes - $outgoing >= 10000;
+            $valid = $diff >= 10000 || $totalOutcomes == 0;
             if (!$valid) { 
                 $this->addFlash(
                     'warning',

@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Incomes;
 use App\Form\SearchDataType;
 use App\Repository\ChurchesRepository;
 use App\Repository\IncomesRepository;
 use App\Repository\OutcomesRepository;
+use DateTimeImmutable;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +25,7 @@ class PrintDataController extends AbstractController
         if ( !($user = $this->getUser())) {
             return $this->redirectToRoute('app_login');
         }
-        $churches = $repository->findAll();     
+        $churches = $repository->findAll();  
         return $this->render('printData/index.html.twig', [
             'user' => $user->getDesign(),
             'slug' => 'Welcome to CFM',
@@ -52,6 +52,7 @@ class PrintDataController extends AbstractController
                             ]);
 
                 $dataIn = [];
+                $date = null;
                 foreach ($incomes as $income) {
                     $week = $income->getExecutedAt()->format('W-Y');
                     
