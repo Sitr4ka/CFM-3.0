@@ -1,5 +1,5 @@
 Requirements
-
+---
 
   * PHP 8.2.0 or higher;
   * PDO-SQLite PHP extension enabled;
